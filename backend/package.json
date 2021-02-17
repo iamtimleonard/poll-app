@@ -1,0 +1,25 @@
+{
+  "name": "poll-app",
+  "version": "1.0.0",
+  "description": "polling app inspired by florinpop17",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamtimleonard/poll-app.git"
+  },
+  "author": "Tim Leonard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamtimleonard/poll-app/issues"
+  },
+  "homepage": "https://github.com/iamtimleonard/poll-app#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.17"
+  }
+}
