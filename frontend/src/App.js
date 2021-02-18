@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import PollsList from "./components/PollsList";
 import NewPoll from "./components/NewPoll";
 import axios from "axios";
@@ -35,10 +36,26 @@ const App = () => {
     });
   };
   return (
-    <div className="container">
-      <PollsList polls={polls} handleVote={handleVote} />
-      <NewPoll handleCreate={handleCreate} />
-    </div>
+    <Router>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">See All</Link>
+          </li>
+          <li>
+            <Link to="/create">Create Survey</Link>
+          </li>
+        </ul>
+      </nav>
+      <div className="container">
+        <Route path="/" exact>
+          <PollsList polls={polls} handleVote={handleVote} />
+        </Route>
+        <Route path="/create">
+          <NewPoll handleCreate={handleCreate} />
+        </Route>
+      </div>
+    </Router>
   );
 };
 
