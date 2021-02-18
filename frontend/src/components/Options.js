@@ -15,7 +15,9 @@ const Options = ({ votes, options, id, handleVote }) => {
       {voted ? (
         <>
           {options.map((option, index) => (
-            <p key={index}>{`${option}: ${votes[index]} votes`}</p>
+            <p key={index}>{`${option}: ${votes[index]} ${
+              votes[index] === 1 ? "vote" : "votes"
+            }`}</p>
           ))}
         </>
       ) : (

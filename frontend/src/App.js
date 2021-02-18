@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PollsList from "./components/PollsList";
+import NewPoll from "./components/NewPoll";
 import axios from "axios";
 
 const App = () => {
@@ -17,21 +18,26 @@ const App = () => {
     return data;
   };
   const handleVote = (choice, id) => {
-    // get targeted poll by id from state
     let pollFromState = polls.find((poll) => poll._id === id);
     let remainingPolls = polls.filter((poll) => poll._id !== id);
     pollFromState.votes[choice]++;
-
-    // update votes in db
     axios
       .post(`http://localhost:5000/polls/vote/${id}`, pollFromState)
       .then((res) => console.log(res.data));
-    // update votes in state
     setPolls([pollFromState, ...remainingPolls]);
+  };
+  const handleCreate = (pollData) => {
+    pollData.votes = new Array(pollData.options.length).fill(0);
+    axios.post(`http://localhost:5000/polls/add`, pollData).then((res) => {
+      console.log(res.data);
+      pollData._id = res.data;
+      setPolls([...polls, pollData]);
+    });
   };
   return (
     <div className="container">
       <PollsList polls={polls} handleVote={handleVote} />
+      <NewPoll handleCreate={handleCreate} />
     </div>
   );
 };

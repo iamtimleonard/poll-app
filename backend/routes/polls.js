@@ -4,7 +4,7 @@ let Poll = require("../models/poll");
 router.route("/").get((req, res) => {
   Poll.find()
     .then((polls) => res.json(polls))
-    .catch((err) => res.status(400).json("Error " + error));
+    .catch((err) => res.status(400).json("Error " + err));
 });
 
 router.route("/add").post((req, res) => {
@@ -20,7 +20,7 @@ router.route("/add").post((req, res) => {
 
   newPoll
     .save()
-    .then(() => res.json("Poll added!"))
+    .then(() => res.json(newPoll._id))
     .catch((err) => res.status(400).json("Error " + err));
 });
 
