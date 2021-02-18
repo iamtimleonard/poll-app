@@ -30,7 +30,6 @@ const App = () => {
   const handleCreate = (pollData) => {
     pollData.votes = new Array(pollData.options.length).fill(0);
     axios.post(`http://localhost:5000/polls/add`, pollData).then((res) => {
-      console.log(res.data);
       pollData._id = res.data;
       setPolls([...polls, pollData]);
     });
