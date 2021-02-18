@@ -1,10 +1,16 @@
 import PollCard from "./PollCard";
 
-const PollsList = ({ polls }) => {
+const PollsList = ({ polls, handleVote }) => {
   return (
     <>
       {polls.map((poll) => (
-        <PollCard key={poll._id} title={poll.question} />
+        <PollCard
+          options={poll.options}
+          key={poll._id}
+          question={poll.question}
+          id={poll._id}
+          handleVote={handleVote}
+        />
       ))}
     </>
   );

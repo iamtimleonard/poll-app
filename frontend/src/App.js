@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import PollsList from "./components/PollsList";
+import axios from "axios";
 
 const App = () => {
   const [polls, setPolls] = useState([]);
@@ -14,12 +14,12 @@ const App = () => {
   const fetchPolls = async () => {
     const res = await fetch("http://localhost:5000/polls");
     const data = await res.json();
-
     return data;
   };
+  const handleVote = (choice) => {};
   return (
     <div className="container">
-      <PollsList polls={polls} />
+      <PollsList polls={polls} handleVote={handleVote} />
     </div>
   );
 };
