@@ -16,7 +16,19 @@ const App = () => {
     const data = await res.json();
     return data;
   };
-  const handleVote = (choice) => {};
+  const handleVote = (choice, id) => {
+    // get targeted poll by id from state
+    let pollFromState = polls.find((poll) => poll._id === id);
+    let remainingPolls = polls.filter((poll) => poll._id !== id);
+    pollFromState.votes[choice]++;
+
+    // update votes in db
+    axios
+      .post(`http://localhost:5000/polls/vote/${id}`, pollFromState)
+      .then((res) => console.log(res.data));
+    // update votes in state
+    setPolls([pollFromState, ...remainingPolls]);
+  };
   return (
     <div className="container">
       <PollsList polls={polls} handleVote={handleVote} />

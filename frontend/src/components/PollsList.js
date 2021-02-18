@@ -9,6 +9,7 @@ const PollsList = ({ polls, handleVote }) => {
           key={poll._id}
           question={poll.question}
           id={poll._id}
+          votes={poll.votes}
           handleVote={handleVote}
         />
       ))}
