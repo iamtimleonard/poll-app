@@ -16,11 +16,7 @@ const App = () => {
   }, []);
 
   const fetchPolls = async () => {
-    const res = await fetch(
-      process.env.port
-        ? `${process.env.port}/polls`
-        : "http://localhost:5000/polls"
-    );
+    const res = await fetch(`https://its-poll-time.herokuapp.com/polls`);
     const data = await res.json();
     return data;
   };
@@ -34,17 +30,22 @@ const App = () => {
     });
 
     axios
-      .post(`http://localhost:5000/polls/vote/${pollId}`, pollFromState)
+      .post(
+        `https://its-poll-time.herokuapp.com/polls/vote/${pollId}`,
+        pollFromState
+      )
       .then((res) => console.log(res.data));
 
     setPolls([pollFromState, ...remainingPolls]);
   };
 
   const handleCreate = (pollData) => {
-    axios.post(`http://localhost:5000/polls/add`, pollData).then((res) => {
-      pollData._id = res.data;
-      setPolls([...polls, pollData]);
-    });
+    axios
+      .post(`https://its-poll-time.herokuapp.com/polls/add`, pollData)
+      .then((res) => {
+        pollData._id = res.data;
+        setPolls([...polls, pollData]);
+      });
   };
 
   return (
