@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import PollsList from "./components/PollsList";
 import NewPoll from "./components/NewPoll";
 import axios from "axios";
+require("dotenv").config();
 
 const App = () => {
   const [polls, setPolls] = useState([]);
