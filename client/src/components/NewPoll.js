@@ -22,7 +22,10 @@ const NewPoll = ({ handleCreate }) => {
       alert("Question is required!");
       return;
     }
-    let optionsList = options.map((option) => option.text);
+    let optionsList = options.map((option) => {
+      option.votes = 0;
+      return option;
+    });
     const pollData = {
       question,
       options: optionsList,

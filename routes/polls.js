@@ -10,12 +10,10 @@ router.route("/").get((req, res) => {
 router.route("/add").post((req, res) => {
   const question = req.body.question;
   const options = req.body.options;
-  const votes = new Array(options.length).fill(0);
 
   const newPoll = new Poll({
     question,
     options,
-    votes,
   });
 
   newPoll
@@ -35,7 +33,6 @@ router.route("/vote/:id").post((req, res) => {
     .then((poll) => {
       poll.question = req.body.question;
       poll.options = req.body.options;
-      poll.votes = req.body.votes;
 
       poll
         .save()

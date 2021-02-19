@@ -1,36 +1,38 @@
 import { useState } from "react";
 
-const Options = ({ votes, options, id, handleVote }) => {
-  const [choice, setChoice] = useState(1);
+const Options = ({ options, id, handleVote }) => {
+  const [choice, setChoice] = useState("");
   const [voted, setVoted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setVoted(true);
-    handleVote(choice, id);
+    handleVote(parseInt(choice), id);
   };
 
   return (
     <>
       {voted ? (
         <>
-          {options.map((option, index) => (
-            <p key={index}>{`${option}: ${votes[index]} ${
-              votes[index] === 1 ? "vote" : "votes"
+          {options.map((option) => (
+            <p key={option.id}>{`${option.text}: ${option.votes} ${
+              option.votes === 1 ? "vote" : "votes"
             }`}</p>
           ))}
         </>
       ) : (
         <form onSubmit={handleSubmit}>
-          {options.map((option, index) => (
-            <div key={index}>
+          {options.map((option) => (
+            <div key={option.id}>
               <input
-                onClick={(e) => setChoice(e.target.value)}
+                onClick={(e) => {
+                  setChoice(e.target.value);
+                }}
                 type="radio"
                 name={id}
-                value={index}
+                value={option.id}
               />
-              <label htmlFor={index}>{option}</label>
+              <label htmlFor={option.id}>{option.text}</label>
             </div>
           ))}
           <button>Vote</button>
