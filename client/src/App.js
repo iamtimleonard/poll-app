@@ -14,7 +14,11 @@ const App = () => {
     getPolls();
   }, []);
   const fetchPolls = async () => {
-    const res = await fetch("http://localhost:5000/polls");
+    const res = await fetch(
+      process.env.port
+        ? `${process.env.port}/polls`
+        : "http://localhost:5000/polls"
+    );
     const data = await res.json();
     return data;
   };
