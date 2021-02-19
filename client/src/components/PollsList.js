@@ -3,6 +3,7 @@ import PollCard from "./PollCard";
 const PollsList = ({ polls, handleVote }) => {
   return (
     <>
+      <h2 className="heading">Choose a poll below:</h2>
       {polls.map((poll) => (
         <PollCard
           options={poll.options}

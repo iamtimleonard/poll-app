@@ -50,15 +50,16 @@ const App = () => {
   return (
     <Router>
       <nav>
-        <ul>
-          <li>
+        <ul className="navbar">
+          <li className="nav-link pointer">
             <Link to="/">See All</Link>
           </li>
-          <li>
+          <li className="nav-link pointer">
             <Link to="/create">Create Survey</Link>
           </li>
         </ul>
       </nav>
+      <h1>PollBuddy</h1>
       <div className="container">
         <Route path="/" exact>
           <PollsList polls={polls} handleVote={handleVote} />

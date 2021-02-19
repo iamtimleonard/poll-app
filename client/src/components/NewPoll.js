@@ -40,6 +40,7 @@ const NewPoll = ({ handleCreate }) => {
   };
   return (
     <div className="new-poll">
+      <h2 className="heading">Create a New Poll</h2>
       <form>
         <div className="form-control">
           <input
@@ -52,9 +53,11 @@ const NewPoll = ({ handleCreate }) => {
           />
         </div>
         {options.map((option, index) => (
-          <p key={option.id}>
+          <p className="option-input" key={option.id}>
             {option.text}
-            <FaAngry color="red" onClick={() => deleteOption(option.id)} />
+            <span className="icon pointer">
+              <FaAngry color="red" onClick={() => deleteOption(option.id)} />
+            </span>
           </p>
         ))}
         <div className="form-control">
@@ -65,16 +68,20 @@ const NewPoll = ({ handleCreate }) => {
             placeholder="Response option"
           />
         </div>
-        <button disabled={!newOption.length} onClick={handleAddOption}>
-          Add option
-        </button>
-        <button
-          onClick={createPoll}
-          disabled={newOption.length || options.length < 2 || !question.length}
-          type="submit"
-        >
-          Submit
-        </button>
+        <div className="buttons">
+          <button disabled={!newOption.length} onClick={handleAddOption}>
+            Add option
+          </button>
+          <button
+            onClick={createPoll}
+            disabled={
+              newOption.length || options.length < 2 || !question.length
+            }
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );

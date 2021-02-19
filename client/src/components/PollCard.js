@@ -5,7 +5,9 @@ const PollCard = ({ question, options, id, handleVote }) => {
   const [active, setActive] = useState(false);
   return (
     <div className="poll-card">
-      <h2 onClick={() => setActive(!active)}>{question}</h2>
+      <h3 className="question pointer" onClick={() => setActive(!active)}>
+        {question}
+      </h3>
       {active && <Options handleVote={handleVote} options={options} id={id} />}
     </div>
   );
