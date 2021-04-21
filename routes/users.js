@@ -13,6 +13,15 @@ router.route("/:id").get((req, res) => {
     .catch((err) => res.status(400).json("Error " + err));
 });
 
+router.route("/login").post((req, res) => {
+  User.findOne({ name: req.body.name }).exec((err, user) => {
+    if (err) {
+      return res.send();
+    }
+    res.send(user);
+  });
+});
+
 router.route("/add").post((req, res) => {
   const name = req.body.name;
 
