@@ -1,19 +1,20 @@
+const crypto = require("crypto");
 const router = require("express").Router();
 let User = require("../models/user");
 
-router.route("/").get((req, res) => {
+router.get("/", (req, res) => {
   User.find()
     .then((users) => res.json(users))
     .catch((err) => res.status(400).json("Error " + err));
 });
 
-router.route("/:id").get((req, res) => {
+router.get("/:id/", (req, res) => {
   User.findById(req.params.id)
     .then((user) => res.json(user))
     .catch((err) => res.status(400).json("Error " + err));
 });
 
-router.route("/login").post((req, res) => {
+router.post("/login", (req, res) => {
   const { name, password } = req.body;
   User.findOne({ name }).exec((err, foundUser) => {
     if (err) {
@@ -22,19 +23,22 @@ router.route("/login").post((req, res) => {
     if (!foundUser) {
       return res.status(401).send("something went wrong");
     }
-    if (foundUser.password !== password) {
+    const [hashed, salt] = foundUser.password.split(".");
+    const hashedSuppliedPassword = crypto.scryptSync(password, salt, 64);
+    if (hashed !== hashedSuppliedPassword.toString("hex")) {
       return res.status(401).send("something went wrong");
     }
     res.send(foundUser);
   });
 });
 
-router.route("/add").post((req, res) => {
+router.post("/add", (req, res) => {
   const { name, password } = req.body;
-
+  const salt = crypto.randomBytes(8).toString("hex");
+  const buffer = crypto.scryptSync(password, salt, 64);
   const newUser = new User({
     name,
-    password,
+    password: `${buffer.toString("hex")}.${salt}`,
     created: [],
     voted: [],
   });
@@ -45,7 +49,7 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error " + err));
 });
 
-router.route("/vote/:id").post((req, res) => {
+router.post("/vote/:id", (req, res) => {
   User.findById(req.params.id).then((user) => {
     user.voted = req.body.voted;
     user.save().then(() => res.json("voted"));

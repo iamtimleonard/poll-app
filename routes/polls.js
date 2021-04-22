@@ -2,13 +2,13 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 let Poll = require("../models/poll");
 
-router.route("/").get((req, res) => {
+router.get("/", (req, res) => {
   Poll.find()
     .then((polls) => res.json(polls))
     .catch((err) => res.status(400).json("Error " + err));
 });
 
-router.route("/add").post((req, res) => {
+router.post("/add", (req, res) => {
   const question = req.body.question;
   const options = req.body.options;
 
@@ -23,13 +23,13 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error " + err));
 });
 
-router.route("/:id").get((req, res) => {
+router.get("/:id", (req, res) => {
   Poll.findById(req.params.id)
     .then((poll) => res.json(poll))
     .catch((err) => res.status(400).json("Error " + err));
 });
 
-router.route("/vote").post((req, res) => {
+router.post("/vote", (req, res) => {
   const { user, pollId, choice } = req.body;
   Poll.findById(pollId, async (err, foundPoll) => {
     if (err) {
