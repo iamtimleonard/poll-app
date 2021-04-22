@@ -9,6 +9,11 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  password: {
+    type: String,
+    trim: true,
+    required: true,
+  },
   created: Array,
   voted: Array,
 });

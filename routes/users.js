@@ -14,19 +14,27 @@ router.route("/:id").get((req, res) => {
 });
 
 router.route("/login").post((req, res) => {
-  User.findOne({ name: req.body.name }).exec((err, user) => {
+  const { name, password } = req.body;
+  User.findOne({ name }).exec((err, foundUser) => {
     if (err) {
-      return res.send();
+      return res.status(400).json("Error " + err);
     }
-    res.send(user);
+    if (!foundUser) {
+      return res.status(401).send("something went wrong");
+    }
+    if (foundUser.password !== password) {
+      return res.status(401).send("something went wrong");
+    }
+    res.send(foundUser);
   });
 });
 
 router.route("/add").post((req, res) => {
-  const name = req.body.name;
+  const { name, password } = req.body;
 
   const newUser = new User({
     name,
+    password,
     created: [],
     voted: [],
   });
