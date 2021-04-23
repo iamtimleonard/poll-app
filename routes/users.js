@@ -3,12 +3,14 @@ const router = require("express").Router();
 let User = require("../models/user");
 
 router.get("/", (req, res) => {
-  User.find()
-    .then((users) => res.json(users))
-    .catch((err) => res.status(400).json("Error " + err));
+  res.json("searched for user");
 });
 
-router.get("/:id/", (req, res) => {
+router.get("/logout", (req, res) => {
+  res.json("logged out");
+});
+
+router.get("/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => res.json(user))
     .catch((err) => res.status(400).json("Error " + err));
