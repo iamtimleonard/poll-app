@@ -9,18 +9,21 @@ router.get("/", (req, res) => {
 });
 
 router.post("/add", (req, res) => {
-  const question = req.body.question;
-  const options = req.body.options;
+  const { question, options, createdBy } = req.body;
 
   const newPoll = new Poll({
     question,
     options,
+    createdBy,
   });
 
   newPoll
     .save()
     .then(() => res.json(newPoll._id))
-    .catch((err) => res.status(400).json("Error " + err));
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json("Error " + err);
+    });
 });
 
 router.get("/:id", (req, res) => {
