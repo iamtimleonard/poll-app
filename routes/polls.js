@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 let Poll = require("../models/poll");
+let User = require("../models/user");
 
 router.get("/", (req, res) => {
   Poll.find()
@@ -19,7 +20,14 @@ router.post("/add", (req, res) => {
 
   newPoll
     .save()
-    .then(() => res.json(newPoll._id))
+    .then(() => {
+      User.findById(createdBy.id).then((foundUser) => {
+        foundUser.created.push(newPoll._id);
+        foundUser.markModified("created");
+        foundUser.save();
+      });
+      res.json(newPoll._id);
+    })
     .catch((err) => {
       console.log(err);
       res.status(400).json("Error " + err);
