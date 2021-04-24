@@ -58,4 +58,11 @@ router.post("/vote", (req, res) => {
   });
 });
 
+router.get("/getall/:id", async (req, res) => {
+  const foundPolls = await Poll.aggregate([
+    { $match: { "createdBy.id": req.params.id } },
+  ]);
+  res.send(foundPolls);
+});
+
 module.exports = router;
