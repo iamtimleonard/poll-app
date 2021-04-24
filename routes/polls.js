@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 let Poll = require("../models/poll");
+let User = require("../models/user");
 
 router.get("/", (req, res) => {
   Poll.find()
@@ -9,18 +10,28 @@ router.get("/", (req, res) => {
 });
 
 router.post("/add", (req, res) => {
-  const question = req.body.question;
-  const options = req.body.options;
+  const { question, options, createdBy } = req.body;
 
   const newPoll = new Poll({
     question,
     options,
+    createdBy,
   });
 
   newPoll
     .save()
-    .then(() => res.json(newPoll._id))
-    .catch((err) => res.status(400).json("Error " + err));
+    .then(() => {
+      User.findById(createdBy.id).then((foundUser) => {
+        foundUser.created.push(newPoll._id);
+        foundUser.markModified("created");
+        foundUser.save();
+      });
+      res.json(newPoll._id);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json("Error " + err);
+    });
 });
 
 router.get("/:id", (req, res) => {
@@ -45,6 +56,13 @@ router.post("/vote", (req, res) => {
       res.send(doc);
     });
   });
+});
+
+router.get("/getall/:id", async (req, res) => {
+  const foundPolls = await Poll.aggregate([
+    { $match: { "createdBy.id": req.params.id } },
+  ]);
+  res.send(foundPolls);
 });
 
 module.exports = router;
