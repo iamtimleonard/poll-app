@@ -42,7 +42,7 @@ router.get("/:id", (req, res) => {
 
 router.post("/vote", (req, res) => {
   const { user, pollId, choice } = req.body;
-  Poll.findById(pollId, async (err, foundPoll) => {
+  Poll.findById(pollId, (err, foundPoll) => {
     if (err) {
       return res.send(err);
     }
@@ -60,7 +60,7 @@ router.post("/vote", (req, res) => {
 
 router.post("/vote/change", (req, res) => {
   const { pollId, userId } = req.body;
-  Poll.findById(pollId, async (err, foundPoll) => {
+  Poll.findById(pollId, (err, foundPoll) => {
     if (err) {
       return res.send(err);
     }
