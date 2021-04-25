@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const router = require("express").Router();
+const mongoose = require("mongoose");
 let User = require("../models/user");
 
 router.get("/", (req, res) => {

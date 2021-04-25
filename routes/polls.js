@@ -42,7 +42,7 @@ router.get("/:id", (req, res) => {
 
 router.post("/vote", (req, res) => {
   const { user, pollId, choice } = req.body;
-  Poll.findById(pollId, async (err, foundPoll) => {
+  Poll.findById(pollId, (err, foundPoll) => {
     if (err) {
       return res.send(err);
     }
@@ -55,6 +55,29 @@ router.post("/vote", (req, res) => {
     foundPoll.save((err, doc) => {
       res.send(doc);
     });
+  });
+});
+
+router.post("/vote/change", (req, res) => {
+  const { pollId, userId } = req.body;
+  Poll.findById(pollId, (err, foundPoll) => {
+    if (err) {
+      return res.send(err);
+    }
+    foundPoll.options.forEach((option) => {
+      if (option.votes.includes(userId)) {
+        option.votes.splice(option.votes.indexOf(userId), 1);
+      }
+    });
+    foundPoll.markModified("options");
+    foundPoll.save((err, doc) => {
+      res.send(doc);
+    });
+  });
+  User.findById(userId).then((foundUser) => {
+    foundUser.voted.splice(foundUser.voted.indexOf(pollId), 1);
+    foundUser.markModified("voted");
+    foundUser.save();
   });
 });
 
