@@ -90,9 +90,8 @@ router.get("/getall/:id", async (req, res) => {
 
 router.post("/delete/:id", async (req, res) => {
   try {
-    const deleteMessage = await Poll.findByIdAndDelete(req.params.id);
-    console.log(deleteMessage);
-    res.send("deleted");
+    const deletedPoll = await Poll.findByIdAndDelete(req.params.id);
+    res.send(deletedPoll);
   } catch (err) {
     console.log(err.message);
     res.status(400).send("something went wrong, please try again");
