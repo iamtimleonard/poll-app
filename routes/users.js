@@ -59,4 +59,13 @@ router.post("/vote/:id", (req, res) => {
   });
 });
 
+router.post("/delete", async (req, res) => {
+  try {
+    let deletedUser = await User.findByIdAndDelete(req.body.userId);
+    res.send(deletedUser);
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
 module.exports = router;
