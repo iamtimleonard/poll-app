@@ -88,4 +88,14 @@ router.get("/getall/:id", async (req, res) => {
   res.send(foundPolls);
 });
 
+router.post("/delete/:id", async (req, res) => {
+  try {
+    const deletedPoll = await Poll.findByIdAndDelete(req.params.id);
+    res.send(deletedPoll);
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).send("something went wrong, please try again");
+  }
+});
+
 module.exports = router;
