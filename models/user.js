@@ -14,8 +14,8 @@ const userSchema = new Schema({
     trim: true,
     required: true,
   },
-  created: Array,
-  voted: Array,
+  created: { type: Array, default: [] },
+  voted: { type: Array, default: [] },
   joined: { type: Date, default: Date.now },
 });
 
