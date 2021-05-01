@@ -3,13 +3,16 @@ const mongoose = require("mongoose");
 let Poll = require("../models/poll");
 let User = require("../models/user");
 
-router.get("/", (req, res) => {
-  Poll.find()
-    .then((polls) => res.json(polls))
-    .catch((err) => res.status(400).json("Error " + err));
+router.get("/", async (req, res) => {
+  try {
+    let polls = await Poll.find();
+    res.json(polls);
+  } catch (err) {
+    res.status(400).json(`Error: ${err}`);
+  }
 });
 
-router.post("/add", (req, res) => {
+router.post("/add", async (req, res) => {
   const { question, options, createdBy } = req.body;
 
   const newPoll = new Poll({
@@ -17,35 +20,31 @@ router.post("/add", (req, res) => {
     options,
     createdBy,
   });
-
-  newPoll
-    .save()
-    .then(() => {
-      User.findById(createdBy.id).then((foundUser) => {
-        foundUser.created.push(newPoll._id);
-        foundUser.markModified("created");
-        foundUser.save();
-      });
-      res.json(newPoll._id);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json("Error " + err);
-    });
+  try {
+    let savedPoll = await newPoll.save();
+    let foundUser = await User.findById(createdBy.id);
+    foundUser.created.push(savedPoll._id);
+    foundUser.markModified("created");
+    foundUser.save();
+    res.json(newPoll._id);
+  } catch (err) {
+    res.status(400).json(`Error: ${err}`);
+  }
 });
 
-router.get("/:id", (req, res) => {
-  Poll.findById(req.params.id)
-    .then((poll) => res.json(poll))
-    .catch((err) => res.status(400).json("Error " + err));
+router.get("/:id", async (req, res) => {
+  try {
+    let foundPoll = await Poll.findById(req.params.id);
+    res.json(foundPoll);
+  } catch (err) {
+    res.status(400).json(`Error: ${err}`);
+  }
 });
 
-router.post("/vote", (req, res) => {
+router.post("/vote", async (req, res) => {
   const { user, pollId, choice } = req.body;
-  Poll.findById(pollId, (err, foundPoll) => {
-    if (err) {
-      return res.send(err);
-    }
+  try {
+    let foundPoll = await Poll.findById(pollId);
     foundPoll.options.forEach((option) => {
       if (option.id === choice) {
         option.votes = [...option.votes, user._id];
@@ -55,15 +54,15 @@ router.post("/vote", (req, res) => {
     foundPoll.save((err, doc) => {
       res.send(doc);
     });
-  });
+  } catch (err) {
+    res.send(err);
+  }
 });
 
-router.post("/vote/change", (req, res) => {
+router.post("/vote/change", async (req, res) => {
   const { pollId, userId } = req.body;
-  Poll.findById(pollId, (err, foundPoll) => {
-    if (err) {
-      return res.send(err);
-    }
+  try {
+    let foundPoll = Poll.findById(pollId);
     foundPoll.options.forEach((option) => {
       if (option.votes.includes(userId)) {
         option.votes.splice(option.votes.indexOf(userId), 1);
@@ -73,12 +72,14 @@ router.post("/vote/change", (req, res) => {
     foundPoll.save((err, doc) => {
       res.send(doc);
     });
-  });
-  User.findById(userId).then((foundUser) => {
-    foundUser.voted.splice(foundUser.voted.indexOf(pollId), 1);
-    foundUser.markModified("voted");
-    foundUser.save();
-  });
+    User.findById(userId).then((foundUser) => {
+      foundUser.voted.splice(foundUser.voted.indexOf(pollId), 1);
+      foundUser.markModified("voted");
+      foundUser.save();
+    });
+  } catch (err) {
+    res.status(400).send(`Error: ${err}`);
+  }
 });
 
 router.get("/getall/:id", async (req, res) => {
