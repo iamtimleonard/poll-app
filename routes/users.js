@@ -44,6 +44,7 @@ router.post("/add", async (req, res) => {
 
   try {
     let savedUser = await newUser.save();
+    req.session.user = { userId: savedUser.id, username: savedUser.username };
     res.json(savedUser);
   } catch (err) {
     res.status(400).json("Error: " + err);
@@ -57,7 +58,7 @@ router.post("/vote/:id", async (req, res) => {
     await foundUser.save();
     res.json("voted");
   } catch (err) {
-    res.send(err);
+    res.status(400).send(err);
   }
 });
 

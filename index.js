@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const connectStore = require("connect-mongo");
 
 require("dotenv").config();
 const port = process.env.PORT || 5000;
@@ -15,6 +17,7 @@ const uri = process.env.ATLAS_URI;
     });
     console.log("#######MongoDB connected########");
     const app = express();
+    const MongoStore = connectStore(session);
     app.disable("x-powered-by");
     app.use(
       cors({
@@ -22,6 +25,23 @@ const uri = process.env.ATLAS_URI;
       })
     );
     app.use(express.json());
+    app.use(
+      session({
+        name: process.env.SESS_NAME,
+        secret: process.env.SESS_SECRET,
+        saveUninitialized: false,
+        resave: false,
+        store: new MongoStore({
+          mongooseConnection: mongoose.connection,
+          collection: "session",
+          ttl: parseInt(process.env.SESS_LIFETIME) / 1000,
+        }),
+        cookie: {
+          sameSite: true,
+          maxAge: parseInt(process.env.SESS_LIFETIME),
+        },
+      })
+    );
 
     const pollRouter = require("./routes/polls");
     const userRouter = require("./routes/users");
