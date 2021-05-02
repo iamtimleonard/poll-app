@@ -1,14 +1,29 @@
 const crypto = require("crypto");
+const session = require("express-session");
 const router = require("express").Router();
 const mongoose = require("mongoose");
 let User = require("../models/user");
 
 router.get("/", (req, res) => {
-  res.json("searched for user");
+  res.send(req.session.user);
 });
 
 router.get("/logout", (req, res) => {
-  res.json("logged out");
+  try {
+    const user = req.session.user;
+    if (user) {
+      session.destroy((err) => {
+        if (err) throw err;
+
+        res.clearCookie(process.env.SESS_NAME);
+        res.send(user);
+      });
+    } else {
+      throw new Error("Something went wrong");
+    }
+  } catch (err) {
+    res.status(422).send(err);
+  }
 });
 
 router.get("/:id", (req, res) => {
@@ -29,6 +44,7 @@ router.post("/login", async (req, res) => {
     if (hashed !== hashedSuppliedPassword.toString("hex")) {
       return res.status(401).send("something went wrong");
     }
+    req.session.user = { userId: foundUser.id, username: foundUser.username };
     res.send(foundUser);
   } catch (err) {
     return res.status(400).json("Error " + err);
