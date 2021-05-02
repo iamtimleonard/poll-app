@@ -37,18 +37,16 @@ router.post("/login", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { name, password } = req.body;
-  const salt = crypto.randomBytes(8).toString("hex");
-  const buffer = crypto.scryptSync(password, salt, 64);
   const newUser = new User({
     name,
-    password: `${buffer.toString("hex")}.${salt}`,
+    password,
   });
 
   try {
     let savedUser = await newUser.save();
     res.json(savedUser);
   } catch (err) {
-    res.status(400).json("Error " + err);
+    res.status(400).json("Error: " + err);
   }
 });
 
