@@ -4,7 +4,7 @@
   "description": "polling app inspired by florinpop17",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watch-all",
     "start": "node index.js"
   },
   "repository": {
@@ -25,5 +25,18 @@
   },
   "engines": {
     "node": "15.5.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^26.6.3",
+    "superagent": "^6.1.0",
+    "supertest": "^6.1.3"
   }
 }
