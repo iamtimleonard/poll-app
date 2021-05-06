@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 let User = require("../models/user");
 
 router.get("/", (req, res) => {
-  res.json("searched for user");
+  res.status(200).send("okay");
 });
 
 router.get("/logout", (req, res) => {
